@@ -1,9 +1,12 @@
 # Ignore all
 *
-*.txt
 
 # Unignore all with extensions
 !*.*
+**/*.txt
+**/*.json
 
 # Unignore all dirs
 !*/
+
+**/*-data/
