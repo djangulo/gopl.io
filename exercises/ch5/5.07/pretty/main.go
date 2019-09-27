@@ -82,12 +82,12 @@ func startElement(w io.Writer, n *html.Node) {
 			fmt.Fprint(w, " />\n")
 			return
 		}
-		fmt.Print(">\n")
+		fmt.Print(">")
 		depth++
 	}
 	if n.Type == html.TextNode {
 		data := re.ReplaceAllString(n.Data, "")
-		fmt.Fprintf(w, "%*s%s\n", depth*2, "", data)
+		fmt.Fprintf(w, "%*s%s", depth*2, "", data)
 	}
 }
 
