@@ -11,7 +11,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/djangulo/gopl.io/exercises/ch4/4.11/common"
+	"github.com/djangulo/gopl.io/exercises/ch4/4.11/issues/common"
 	"github.com/pkg/errors"
 )
 

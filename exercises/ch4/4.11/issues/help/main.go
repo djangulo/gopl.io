@@ -35,7 +35,16 @@ func main() {
 	var stdout, stderr bytes.Buffer
 
 	// "github.com/djangulo/gopl.io/exercises/ch4/4.11/common"
-	basePath := filepath.Join(os.Getenv("GOPATH"), "src", "github.com", "djangulo", "gopl.io", "exercises", "ch4", "4.11", "bin")
+	basePath := filepath.Join(os.Getenv("GOPATH"), "src", "github.com", "djangulo", "gopl.io", "exercises", "ch4", "4.11", "issuses")
+	if err := os.Mkdir(basePath, os.ModeDir); os.IsNotExist(err) {
+		os.MkdirAll(filepath.Join(basePath, "bin"), os.ModeDir)
+		for _, word := range []string{"read", "update", "new"} {
+			err := exec.Command("go", "build", "-o", filepath.Join(basePath, "bin", word), filepath.Join(basePath, word)).Run()
+			if err != nil {
+				panic(err)
+			}
+		}
+	}
 	switch action {
 	case readPkg:
 		cmd := exec.Command(filepath.Join(basePath, "read"), "-h")

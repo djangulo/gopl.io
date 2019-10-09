@@ -2,6 +2,7 @@ package intset
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -86,4 +87,125 @@ func TestAddAll(t *testing.T) {
 	if got != 6 {
 		t.Errorf("received length %d want length 6", got)
 	}
+}
+
+func TestUnionWith(t *testing.T) {
+	var x, y, phi IntSet
+	x.AddAll(1, 2, 3)
+	y.AddAll(3, 4, 5)
+
+	t.Run("non empty set", func(t *testing.T) {
+		z := x.Copy()
+		z.UnionWith(&y)
+
+		got, want := z.Len(), 5
+		if got != want {
+			t.Errorf("got len %d want len %d for union of %s and %s", got, want, x.String(), y.String())
+		}
+	})
+
+	t.Run("empty set", func(t *testing.T) {
+		z := x.Copy()
+		z.UnionWith(&phi)
+
+		got, want := z.Len(), x.Len()
+		if got != want {
+			t.Errorf("got len %d want len %d for union of %s and %s", got, want, x.String(), phi.String())
+		}
+	})
+}
+
+func TestIntersectWith(t *testing.T) {
+	var x, y, phi IntSet
+	x.AddAll(1, 2, 3)
+	y.AddAll(3, 4, 5)
+
+	t.Run("non empty set", func(t *testing.T) {
+		z := x.Copy()
+		z.IntersectWith(&y)
+
+		got, want := z.Len(), 1
+		if got != want {
+			t.Errorf("got len %d want len %d for intersection of %s and %s", got, want, x.String(), y.String())
+		}
+	})
+
+	t.Run("empty set", func(t *testing.T) {
+		z := x.Copy()
+		z.IntersectWith(&phi)
+
+		got, want := z.Len(), 0
+		if got != want {
+			t.Errorf("got len %d want len %d for intersection of %s and %s", got, want, x.String(), phi.String())
+		}
+	})
+
+}
+
+func TestDifferenceWith(t *testing.T) {
+	var x, y, phi IntSet
+	x.AddAll(1, 2, 3)
+	y.AddAll(3, 4, 5)
+
+	t.Run("non empty set", func(t *testing.T) {
+		z := x.Copy()
+		z.DifferenceWith(&y)
+
+		got, want := z.Len(), 2
+		if got != want {
+			t.Errorf("got len %d want len %d for %s.DifferenceWith(%s) = %s", got, want, x.String(), y.String(), z.String())
+		}
+	})
+
+	t.Run("empty set", func(t *testing.T) {
+		z := x.Copy()
+		z.DifferenceWith(&phi)
+
+		got, want := z.Len(), x.Len()
+		if got != want {
+			t.Errorf("got len %d want len %d for %s.DifferenceWith(%s) = %s", got, want, x.String(), phi.String(), z.String())
+		}
+	})
+
+}
+
+func TestSymmetricDifference(t *testing.T) {
+	var x, y, phi IntSet
+	x.AddAll(1, 2, 3)
+	y.AddAll(3, 4, 5)
+
+	t.Run("non empty set", func(t *testing.T) {
+		z := x.Copy()
+		z.SymmetricDifference(&y)
+
+		got, want := z.Len(), 4
+		if got != want {
+			t.Errorf("got len %d want len %d for %s.SymmetricDifference(%s) = %s", got, want, x.String(), y.String(), z.String())
+		}
+	})
+
+	t.Run("empty set", func(t *testing.T) {
+		z := x.Copy()
+		z.SymmetricDifference(&phi)
+
+		got, want := z.Len(), x.Len()
+		if got != want {
+			t.Errorf("got len %d want len %d for %s.SymmetricDifference(%s) = %s", got, want, x.String(), phi.String(), z.String())
+		}
+	})
+
+}
+
+func TestElems(t *testing.T) {
+	var x IntSet
+	x.AddAll(7, 42, 108)
+
+	want := []int{7, 42, 108}
+
+	got := x.Elems()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v want %v for %s.Elems()", got, want, x.String())
+	}
+
 }

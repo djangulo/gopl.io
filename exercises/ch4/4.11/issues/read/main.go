@@ -11,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/djangulo/gopl.io/exercises/ch4/4.11/common"
+	"github.com/djangulo/gopl.io/exercises/ch4/4.11/issues/common"
 )
 
 const issuesURL = "https://api.github.com/search/issues"
